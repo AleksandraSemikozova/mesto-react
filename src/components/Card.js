@@ -1,7 +1,7 @@
 import React from 'react';
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 
-function Card({ card, onCardClick }) {
+function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = React.useContext(CurrentUserContext);
 
   // Определяем, являемся ли мы владельцем текущей карточки
@@ -23,6 +23,14 @@ function Card({ card, onCardClick }) {
     onCardClick(card);
   }
 
+  function handleLikeClick() {
+    onCardLike(card);
+  }
+
+  function handleDeleteClick() {
+    onCardDelete(card);
+  }
+
   return (
     <li className="element">
       <img
@@ -34,7 +42,8 @@ function Card({ card, onCardClick }) {
       <button
         type="button"
         aria-label="Удалить"
-        className="element__remove-btn btn"
+        className={cardDeleteButtonClassName}
+        onClick={handleDeleteClick}
       ></button>
       <div className="element__description">
         <h2 className="element__text">{card.name}</h2>
@@ -42,7 +51,8 @@ function Card({ card, onCardClick }) {
           <button
             type="button"
             aria-label="Нравится"
-            className="element__like-btn btn"
+            className={cardLikeButtonClassName}
+            onClick={handleLikeClick}
           ></button>
           <p className="element__like-counter">0</p>
         </div>
