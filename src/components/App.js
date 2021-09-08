@@ -1,10 +1,12 @@
 import React from 'react';
+import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import Header from './Header.js';
 import Footer from './Footer.js';
 import Main from './Main.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
+import EditProfilePopup from './EditProfilePopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -18,7 +20,7 @@ function App() {
 
   const [currentUser, setCurrentUser] = React.useState({});
 
-  useEffect(() => {
+  React.useEffect(() => {
     api
       .getUserInfo()
       .then((info) => {
@@ -47,6 +49,18 @@ function App() {
     setImagePopupOpen(true);
   }
 
+  function handleUpdateUser({ name, about }) {
+    api
+      .editUserInfo(name, about)
+      .then((info) => {
+        setCurrentUser(info);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   function closeAllPopups() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
@@ -69,43 +83,11 @@ function App() {
           />
           <Footer />
 
-          <PopupWithForm
-            name="popup-profile"
-            title="Редактировать профиль"
-            buttonText="Сохранить"
+          <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
-          >
-            <fieldset className="popup__input-container">
-              <label className="popup__input-label">
-                <input
-                  type="text"
-                  id="name-item"
-                  className="popup__item popup__item_type_user-name"
-                  name="username"
-                  placeholder="Имя"
-                  minLength="2"
-                  maxLength="40"
-                  required
-                />
-                <span className="popup__item-error name-item-error"></span>
-              </label>
-
-              <label className="popup__input-label">
-                <input
-                  type="text"
-                  id="user-job"
-                  className="popup__item popup__item_type_user-job"
-                  name="job"
-                  placeholder="О себе"
-                  minLength="2"
-                  maxLength="200"
-                  required
-                />
-                <span className="popup__item-error user-job-error"></span>
-              </label>
-            </fieldset>
-          </PopupWithForm>
+            onUpdateUser={handleUpdateUser}
+          />
 
           <PopupWithForm
             name="popup-add-img"
