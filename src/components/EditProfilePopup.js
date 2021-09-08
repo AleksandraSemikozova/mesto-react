@@ -16,9 +16,9 @@ function EditProfilePopup({ isOpen, onClose, onSubmit, onUpdateUser }) {
     setDescription(evt.target.value);
   }
 
-  function handleSubmit(evt) {
+  function handleSubmit(e) {
     // Запрещаем браузеру переходить по адресу формы
-    evt.preventDefault();
+    e.preventDefault();
 
     // Передаём значения управляемых компонентов во внешний обработчик
     onUpdateUser({

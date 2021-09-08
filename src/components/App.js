@@ -7,6 +7,7 @@ import Main from './Main.js';
 import PopupWithForm from './PopupWithForm.js';
 import ImagePopup from './ImagePopup.js';
 import EditProfilePopup from './EditProfilePopup.js';
+import EditAvatarPopup from './EditAvatarPopup.js';
 
 function App() {
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
@@ -54,6 +55,18 @@ function App() {
       .editUserInfo(name, about)
       .then((info) => {
         setCurrentUser(info);
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function handleUpdateAvatar({ avatar }) {
+    api
+      .editUserAvatar(avatar)
+      .then((data) => {
+        setCurrentUser(data);
         closeAllPopups();
       })
       .catch((err) => {
@@ -125,27 +138,11 @@ function App() {
             </fieldset>
           </PopupWithForm>
 
-          <PopupWithForm
-            name="popup-update-avatar"
-            title="Обновить аватар"
-            buttonText="Сохранить"
+          <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
-          >
-            <fieldset className="popup__input-container">
-              <label className="popup__input-label">
-                <input
-                  type="url"
-                  id="avatar-link"
-                  className="popup__item popup__item_type_avatar-link"
-                  name="link"
-                  placeholder="Ссылка на аватар"
-                  required
-                />
-                <span className="popup__item-error avatar-link-error"></span>
-              </label>
-            </fieldset>
-          </PopupWithForm>
+            onUpdateAvatar={handleUpdateAvatar}
+          />
 
           <PopupWithForm
             title="Вы уверены?"
