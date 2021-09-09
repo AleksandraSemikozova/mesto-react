@@ -1,5 +1,4 @@
 import React from 'react';
-import { useEffect } from 'react';
 import api from '../utils/api.js';
 import { CurrentUserContext } from '../contexts/CurrentUserContext.js';
 import Header from './Header.js';
@@ -25,14 +24,32 @@ function App() {
 
   const [cards, setCards] = React.useState([]);
 
+  React.useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([info, data]) => {
+        setCurrentUser(info);
+        setCards(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   function handleCardLike(card) {
-    // Снова проверяем, есть ли уже лайк на этой карточке
     const isLiked = card.likes.some((i) => i._id === currentUser._id);
 
-    // Отправляем запрос в API и получаем обновлённые данные карточки
-    api.changeLikeCardStatus(card._id, !isLiked).then((newCard) => {
-      setCards((state) => state.map((c) => (c._id === card._id ? newCard : c)));
-    });
+    api
+      .changeLikeCardStatus(card._id, isLiked)
+      .then((newCard) => {
+        setCards((cards) =>
+          cards.map((currentCard) =>
+            currentCard._id === card._id ? newCard : currentCard
+          )
+        );
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function handleCardDelete(card) {
@@ -47,27 +64,27 @@ function App() {
       });
   }
 
-  useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // React.useEffect(() => {
+  //   api
+  //     .getInitialCards()
+  //     .then((data) => {
+  //       setCards(data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
-  React.useEffect(() => {
-    api
-      .getUserInfo()
-      .then((info) => {
-        setCurrentUser(info);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+  // React.useEffect(() => {
+  //   api
+  //     .getUserInfo()
+  //     .then((info) => {
+  //       setCurrentUser(info);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   function handleEditProfileClick() {
     setIsEditProfilePopupOpen(true);
@@ -102,8 +119,8 @@ function App() {
   function handleUpdateAvatar({ avatar }) {
     api
       .editUserAvatar(avatar)
-      .then((data) => {
-        setCurrentUser(data);
+      .then((info) => {
+        setCurrentUser(info);
         closeAllPopups();
       })
       .catch((err) => {
@@ -178,84 +195,6 @@ function App() {
             onClose={closeAllPopups}
           />
         </div>
-
-        {/* <section className="popup popup_content_addimg">
-        <div className="popup__container">
-          <button
-            type="button"
-            aria-label="Закрыть"
-            className="popup__close-icon btn"
-          ></button>
-          <form
-            action="#"
-            name="popup-add-img"
-            className="popup__form popup__form_img"
-            novalidate
-          >
-            <h2 className="popup__title">Новое место</h2>
-            
-            <button
-              type="submit"
-              aria-label="Сохранить изменения"
-              className="popup__btn btn"
-            >
-              Создать
-            </button>
-          </form>
-        </div>
-  </section> */}
-
-        {/* <section className="popup popup_content_delete-img">
-        <div className="popup__container">
-          <button
-            type="button"
-            aria-label="Закрыть"
-            className="popup__close-icon btn"
-          ></button>
-
-          <form
-            action="#"
-            name="popup-delete-img"
-            className="popup__form popup__form_delete-img"
-            novalidate
-          >
-            <h2 className="popup__title">Вы уверены?</h2>
-            <button
-              type="submit"
-              aria-label="Удалить"
-              className="popup__btn btn"
-            >
-              Да
-            </button>
-          </form>
-        </div>
-      </section> */}
-
-        {/* <section className="popup popup_content_update-avatar">
-        <div className="popup__container">
-          <button
-            type="button"
-            aria-label="Закрыть"
-            className="popup__close-icon btn"
-          ></button>
-          <form
-            action="#"
-            name="popup-update-avatar"
-            className="popup__form popup__form_update-avatar"
-            novalidate
-          >
-            <h2 className="popup__title">Обновить аватар</h2>
-            
-            <button
-              type="submit"
-              aria-label="Сохранить изменения"
-              className="popup__btn btn"
-            >
-              Сохранить
-            </button>
-          </form>
-        </div>
-      </section> */}
       </div>
     </CurrentUserContext.Provider>
   );

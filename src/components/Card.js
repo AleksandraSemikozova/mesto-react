@@ -4,30 +4,28 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 function Card({ card, onCardClick, onCardLike, onCardDelete }) {
   const currentUser = React.useContext(CurrentUserContext);
 
-  // Определяем, являемся ли мы владельцем текущей карточки
   const isOwn = card.owner._id === currentUser._id;
 
-  // Создаём переменную, которую после зададим в `className` для кнопки удаления
   const cardDeleteButtonClassName = `element__remove-btn ${
     isOwn ? 'element__remove-btn' : 'element__remove-btn_hidden'
   }`;
   // Определяем, есть ли у карточки лайк, поставленный текущим пользователем
-  const isLiked = card.likes.some((i) => i._id === currentUser._id);
+  const isLiked = card.likes.some((item) => item._id === currentUser._id);
 
   // Создаём переменную, которую после зададим в `className` для кнопки лайка
   const cardLikeButtonClassName = `element__like-btn ${
-    isLiked ? '`element__like-btn_active' : ''
+    isLiked ? 'element__like-btn_active' : ''
   }`;
 
   function handleClick() {
     onCardClick(card);
   }
 
-  function handleLikeClick() {
+  function handleCardLike() {
     onCardLike(card);
   }
 
-  function handleDeleteClick() {
+  function handleCardDelete() {
     onCardDelete(card);
   }
 
@@ -43,7 +41,7 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
         type="button"
         aria-label="Удалить"
         className={cardDeleteButtonClassName}
-        onClick={handleDeleteClick}
+        onClick={handleCardDelete}
       ></button>
       <div className="element__description">
         <h2 className="element__text">{card.name}</h2>
@@ -52,9 +50,9 @@ function Card({ card, onCardClick, onCardLike, onCardDelete }) {
             type="button"
             aria-label="Нравится"
             className={cardLikeButtonClassName}
-            onClick={handleLikeClick}
+            onClick={handleCardLike}
           ></button>
-          <p className="element__like-counter">0</p>
+          <p className="element__like-counter">{card.likes.length}</p>
         </div>
       </div>
     </li>

@@ -62,14 +62,6 @@ class Api {
     }).then(this._checkResponse);
   } // Снимаем лайк
 
-  changeLikeCardStatus(cardId, isLiked) {
-    if (isLiked) {
-      return this.dislikeCard(cardId);
-    } else {
-      return this.likeCard(cardId);
-    }
-  }
-
   removeCard(cardId) {
     return fetch(`${this._address}/cards/${cardId}`, {
       method: 'DELETE',
@@ -82,6 +74,14 @@ class Api {
       return Promise.reject(`Ошибка ${res.status}`);
     }
     return res.json();
+  }
+
+  changeLikeCardStatus(cardId, isLiked) {
+    if (isLiked) {
+      return this.dislikeCard(cardId);
+    } else {
+      return this.likeCard(cardId);
+    }
   }
 }
 
