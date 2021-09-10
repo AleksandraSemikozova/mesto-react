@@ -145,7 +145,11 @@ function App() {
     setIsAddPlacePopupOpen(false);
     setIsEditAvatarPopupOpen(false);
     setImagePopupOpen(false);
-    setSelectedCard({});
+    setSelectedCard({
+      isOpen: false,
+      link: '',
+      name: '',
+    });
   }
 
   return (

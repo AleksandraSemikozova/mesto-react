@@ -11,6 +11,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name: name,
       link: link,
     });
+    handleClear();
   }
 
   function handleChangeName(evt) {
@@ -19,6 +20,11 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
   function handleChangeLink(evt) {
     setLink(evt.target.value);
+  }
+
+  function handleClear() {
+    setName('');
+    setLink('');
   }
 
   return (
@@ -33,6 +39,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       <fieldset className="popup__input-container">
         <label className="popup__input-label">
           <input
+            value={name || ''}
             type="text"
             id="img-name"
             className="popup__item popup__item_type_img-name"
@@ -48,6 +55,7 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
 
         <label className="popup__input-label">
           <input
+            value={link || ''}
             type="url"
             id="img-link"
             className="popup__item popup__item_type_img-link"
