@@ -11,8 +11,13 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
       name: name,
       link: link,
     });
-    handleClear();
+    // handleClear();
   }
+
+  React.useEffect(() => {
+    setName('');
+    setLink('');
+  }, [isOpen]);
 
   function handleChangeName(evt) {
     setName(evt.target.value);
@@ -22,10 +27,10 @@ function AddPlacePopup({ isOpen, onClose, onAddPlace }) {
     setLink(evt.target.value);
   }
 
-  function handleClear() {
-    setName('');
-    setLink('');
-  }
+  // function handleClear() {
+  //   setName('');
+  //   setLink('');
+  // }
 
   return (
     <PopupWithForm
